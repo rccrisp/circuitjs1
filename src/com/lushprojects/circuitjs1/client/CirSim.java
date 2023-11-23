@@ -658,13 +658,14 @@ MouseOutHandler, MouseWheelHandler {
 	if (!hideMenu)
 	    layoutPanel.addNorth(menuBar, MENUBARHEIGHT);
 
-	if (hideSidebar)
-	    VERTICALPANELWIDTH = 0;
-	else {
-		DOM.appendChild(layoutPanel.getElement(), sidePanelCheckbox);
-		DOM.appendChild(layoutPanel.getElement(), sidePanelCheckboxLabel);
-	    layoutPanel.addEast(verticalPanel, VERTICALPANELWIDTH);
-	}
+	VERTICALPANELWIDTH = 0;
+	// if (hideSidebar)
+	//     VERTICALPANELWIDTH = 0;
+	// else {
+	// 	DOM.appendChild(layoutPanel.getElement(), sidePanelCheckbox);
+	// 	DOM.appendChild(layoutPanel.getElement(), sidePanelCheckboxLabel);
+	//     layoutPanel.addEast(verticalPanel, VERTICALPANELWIDTH);
+	// }
 	menuBar.getElement().insertFirst(menuBar.getElement().getChild(1));
 	menuBar.getElement().getFirstChildElement().setAttribute("onclick", "document.getElementsByClassName('toptrigger')[0].checked = false");
 	RootLayoutPanel.get().add(layoutPanel);
@@ -818,7 +819,7 @@ MouseOutHandler, MouseWheelHandler {
 		    readSetupFile(startCircuit, startLabel);
 		}
 		else
-		    getSetupList(true);
+		    getSetupList(false);
 	    }
 	}
 
@@ -1403,20 +1404,20 @@ MouseOutHandler, MouseWheelHandler {
 
     
     public void setSimRunning(boolean s) {
-    	if (s) {
-    	    	if (stopMessage != null)
-    	    	    return;
-    		simRunning = true;
-    		runStopButton.setHTML(Locale.LSHTML("<strong>RUN</strong>&nbsp;/&nbsp;Stop"));
-    		runStopButton.setStylePrimaryName("topButton");
-    		timer.scheduleRepeating(FASTTIMER);
-    	} else {
-    		simRunning = false;
-    		runStopButton.setHTML(Locale.LSHTML("Run&nbsp;/&nbsp;<strong>STOP</strong>"));
-    		runStopButton.setStylePrimaryName("topButton-red");
-    		timer.cancel();
-		repaint();
-    	}
+    	// if (s) {
+    	//     	if (stopMessage != null)
+    	//     	    return;
+    	// 	simRunning = true;
+    	// 	runStopButton.setHTML(Locale.LSHTML("<strong>RUN</strong>&nbsp;/&nbsp;Stop"));
+    	// 	runStopButton.setStylePrimaryName("topButton");
+    	// 	timer.scheduleRepeating(FASTTIMER);
+    	// } else {
+    	// 	simRunning = false;
+    	// 	runStopButton.setHTML(Locale.LSHTML("Run&nbsp;/&nbsp;<strong>STOP</strong>"));
+    	// 	runStopButton.setStylePrimaryName("topButton-red");
+    	// 	timer.cancel();
+		// repaint();
+    	// }
     }
     
     public boolean simIsRunning() {
