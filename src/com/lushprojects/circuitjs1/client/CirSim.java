@@ -562,7 +562,7 @@ MouseOutHandler, MouseWheelHandler {
 	m.addItem(unstackAllItem = iconMenuItem("columns", "Unstack All", new MyCommand("scopes", "unstackAll")));
 	m.addItem(combineAllItem = iconMenuItem("object-group", "Combine All", new MyCommand("scopes", "combineAll")));
 	m.addItem(separateAllItem = iconMenuItem("object-ungroup", "Separate All", new MyCommand("scopes", "separateAll")));
-	menuBar.addItem(Locale.LS("Scopes"), m);
+	// menuBar.addItem(Locale.LS("Scopes"), m);
 
 	optionsMenuBar = m = new MenuBar(true );
 	menuBar.addItem(Locale.LS("Options"), optionsMenuBar);
@@ -3775,7 +3775,7 @@ MouseOutHandler, MouseWheelHandler {
     	int stackptr = 0;
     	currentMenuBar=new MenuBar(true);
     	currentMenuBar.setAutoOpen(true);
-    	menuBar.addItem(Locale.LS("Circuits"), currentMenuBar);
+    	// menuBar.addItem(Locale.LS("Circuits"), currentMenuBar);
     	stack[stackptr++] = currentMenuBar;
     	int p;
     	for (p = 0; p < len; ) {
