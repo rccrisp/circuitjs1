@@ -22,6 +22,7 @@ package com.lushprojects.circuitjs1.client;
     class InductorElm extends CircuitElm {
 	Inductor ind;
 	double inductance;
+	String textDisplay;
 	double initialCurrent;
 	public InductorElm(int xx, int yy) {
 	    super(xx, yy);
@@ -58,8 +59,8 @@ package com.lushprojects.circuitjs1.client;
 	    setPowerColor(g, false);
 	    drawCoil(g, 8, lead1, lead2, v1, v2);
 	    if (sim.showValuesCheckItem.getState()) {
-		String s = getShortUnitText(inductance, "H");
-		drawValues(g, s, hs);
+		// String s = getShortUnitText(inductance, "H");
+		drawValues(g, textDisplay, hs);
 	    }
 	    doDots(g);
 	    drawPosts(g);
@@ -89,29 +90,33 @@ package com.lushprojects.circuitjs1.client;
 	    arr[4] = "P = " + getUnitText(getPower(), "W");
 	}
 	public EditInfo getEditInfo(int n) {
-	    if (n == 0)
+		if (n == 0)
+			return new EditInfo("Text to Display", textDisplay);
+	    if (n == 1)
 		return new EditInfo("Inductance (H)", inductance, 1e-2, 10);
-	    if (n == 1) {
+	    if (n == 2) {
 		EditInfo ei = new EditInfo("", 0, -1, -1);
 		ei.checkbox = new Checkbox("Trapezoidal Approximation",
 					   ind.isTrapezoidal());
 		return ei;
 	    }
-            if (n == 2)
+            if (n == 3)
                 return new EditInfo("Initial Current (on Reset) (A)", initialCurrent);
 	    return null;
 	}
 	
 	public void setEditValue(int n, EditInfo ei) {
-	    if (n == 0 && ei.value > 0)
+		if (n == 0)
+			textDisplay = ei.text;
+	    if (n == 1 && ei.value > 0)
 		inductance = ei.value;
-	    if (n == 1) {
+	    if (n == 2) {
 		if (ei.checkbox.getState())
 		    flags &= ~Inductor.FLAG_BACK_EULER;
 		else
 		    flags |= Inductor.FLAG_BACK_EULER;
 	    }
-            if (n == 2)
+            if (n == 3)
                 initialCurrent = ei.value;
 	    ind.setup(inductance, current, flags);
 	}

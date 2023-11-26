@@ -247,7 +247,7 @@ class EditDialog extends Dialog {
 		int i;
 		for (i = 0; i != einfocount; i++) {
 			EditInfo ei = einfos[i];
-			if (ei.textf!=null && ei.text==null) {
+			if (ei.textf!=null) {
 				try {
 				double d = parseUnits(ei);
 				ei.value = d;

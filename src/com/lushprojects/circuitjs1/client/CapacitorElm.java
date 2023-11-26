@@ -23,6 +23,7 @@ import com.lushprojects.circuitjs1.client.util.Locale;
 
 class CapacitorElm extends CircuitElm {
 	double capacitance;
+	String textDisplay;
 	double compResistance, voltdiff;
 	double initialVoltage;
 	Point plate1[], plate2[];
@@ -106,8 +107,8 @@ class CapacitorElm extends CircuitElm {
 	    }
 	    drawPosts(g);
 	    if (sim.showValuesCheckItem.getState()) {
-		String s = getShortUnitText(capacitance, "F");
-		drawValues(g, s, hs);
+		// String s = getShortUnitText(capacitance, "F");
+		drawValues(g, textDisplay, hs);
 	    }
 	}
 	void stamp() {
@@ -181,28 +182,32 @@ class CapacitorElm extends CircuitElm {
 	    return Locale.LS("capacitor") + ", " + getUnitText(capacitance, "F");
 	}
 	public EditInfo getEditInfo(int n) {
-	    if (n == 0)
+		if (n == 0)
+			return new EditInfo("Text to Display", textDisplay);
+	    if (n == 1)
 		return new EditInfo("Capacitance (F)", capacitance, 1e-6, 1e-3);
-	    if (n == 1) {
+	    if (n == 2) {
 		EditInfo ei = new EditInfo("", 0, -1, -1);
 		ei.checkbox = new Checkbox("Trapezoidal Approximation", isTrapezoidal());
 		return ei;
 	    }
-	    if (n == 2)
+	    if (n == 3)
 		return new EditInfo("Initial Voltage (on Reset)", initialVoltage);
 	    // if you add more things here, check PolarCapacitorElm
 	    return null;
 	}
 	public void setEditValue(int n, EditInfo ei) {
-	    if (n == 0)
+		if (n == 0)
+			textDisplay = ei.text;
+	    if (n == 1)
 		capacitance = (ei.value > 0) ? ei.value : 1e-12;
-	    if (n == 1) {
+	    if (n == 2) {
 		if (ei.checkbox.getState())
 		    flags &= ~FLAG_BACK_EULER;
 		else
 		    flags |= FLAG_BACK_EULER;
 	    }
-	    if (n == 2)
+	    if (n == 3)
 		initialVoltage = ei.value;
 	}
 	int getShortcut() { return 'c'; }
