@@ -34,6 +34,7 @@ class VoltageElm extends CircuitElm {
     static final int WF_PULSE = 5;
     static final int WF_NOISE = 6;
     static final int WF_VAR = 7;
+	String textDisplay;
     double frequency, maxVoltage, freqTimeZero, bias,
 	phaseShift, dutyCycle, noiseValue;
     
@@ -42,6 +43,7 @@ class VoltageElm extends CircuitElm {
     VoltageElm(int xx, int yy, int wf) {
 	super(xx, yy);
 	waveform = wf;
+	textDisplay = "Value";
 	maxVoltage = 5;
 	frequency = 40;
 	dutyCycle = .5;
@@ -50,6 +52,7 @@ class VoltageElm extends CircuitElm {
     public VoltageElm(int xa, int ya, int xb, int yb, int f,
 		      StringTokenizer st) {
 	super(xa, ya, xb, yb, f);
+	textDisplay = "Value";
 	maxVoltage = 5;
 	frequency = 40;
 	waveform = WF_DC;
@@ -150,6 +153,7 @@ class VoltageElm extends CircuitElm {
 	    setVoltageColor(g, volts[0]);
 	    setPowerColor(g, false);
 	    interpPoint2(lead1, lead2, ps1, ps2, 0, 10);
+		displayValues(g);
 	    drawThickLine(g, ps1, ps2);
 	    setVoltageColor(g, volts[1]);
 	    setPowerColor(g, false);
@@ -160,6 +164,7 @@ class VoltageElm extends CircuitElm {
 	} else {
 	    setBbox(point1, point2, circleSize);
 	    interpPoint(lead1, lead2, ps1, .5);
+		displayValues(g);
 	    drawWaveform(g, ps1);
 	    String inds;
 	    if (bias>0 || (bias==0 && waveform == WF_PULSE))
@@ -185,6 +190,14 @@ class VoltageElm extends CircuitElm {
 	drawPosts(g);
     }
 	
+	void displayValues(Graphics g) {
+		// String s = getShortUnitText(maxVoltage, "Hz");
+		if (sim.showValuesCheckItem.getState() && waveform != WF_NOISE) {
+			if (dx == 0 || dy == 0)
+			drawValues(g, textDisplay, 17);
+		}
+	}
+
     void drawWaveform(Graphics g, Point center) {
 	g.setColor(needsHighlight() ? selectColor : Color.gray);
 	setPowerColor(g, false);
@@ -256,11 +269,11 @@ class VoltageElm extends CircuitElm {
 	    break;
 	}
 	}
-	if (sim.showValuesCheckItem.getState() && waveform != WF_NOISE) {
-	    String s = getShortUnitText(frequency, "Hz");
-	    if (dx == 0 || dy == 0)
-		drawValues(g, s, circleSize);
-	}
+	// if (sim.showValuesCheckItem.getState() && waveform != WF_NOISE) {
+	//     String s = getShortUnitText(frequency, "Hz");
+	//     if (dx == 0 || dy == 0)
+	// 	drawValues(g, s, circleSize);
+	// }
     }
 	
     int getVoltageSourceCount() {
@@ -300,9 +313,11 @@ class VoltageElm extends CircuitElm {
     }
     public EditInfo getEditInfo(int n) {
 	if (n == 0)
+	    return new EditInfo("Text to Display", textDisplay);
+	if (n == 1)
 	    return new EditInfo(waveform == WF_DC ? "Voltage" :
 				"Max Voltage", maxVoltage, -20, 20);
-	if (n == 1) {
+	if (n == 2) {
 	    EditInfo ei =  new EditInfo("Waveform", waveform, -1, -1);
 	    ei.choice = new Choice();
 	    ei.choice.add("D/C");
@@ -315,26 +330,28 @@ class VoltageElm extends CircuitElm {
 	    ei.choice.select(waveform);
 	    return ei;
 	}
-	if (n == 2)
+	if (n == 3)
 	    return new EditInfo("DC Offset (V)", bias, -20, 20);
 	if (waveform == WF_DC || waveform == WF_NOISE)
 	    return null;
-	if (n == 3)
-	    return new EditInfo("Frequency (Hz)", frequency, 4, 500);
 	if (n == 4)
+	    return new EditInfo("Frequency (Hz)", frequency, 4, 500);
+	if (n == 5)
 	    return new EditInfo("Phase Offset (degrees)", phaseShift*180/pi,
 				-180, 180).setDimensionless();
-	if (n == 5 && (waveform == WF_PULSE || waveform == WF_SQUARE))
+	if (n == 6 && (waveform == WF_PULSE || waveform == WF_SQUARE))
 	    return new EditInfo("Duty Cycle", dutyCycle*100, 0, 100).
 		setDimensionless();
 	return null;
     }
     public void setEditValue(int n, EditInfo ei) {
 	if (n == 0)
-	    maxVoltage = ei.value;
+		textDisplay = ei.text;
 	if (n == 2)
+	    maxVoltage = ei.value;
+	if (n == 3)
 	    bias = ei.value;
-	if (n == 3) {
+	if (n == 4) {
 	    // adjust time zero to maintain continuity ind the waveform
 	    // even though the frequency has changed.
 	    double oldfreq = frequency;
@@ -349,7 +366,7 @@ class VoltageElm extends CircuitElm {
 	    double adj = frequency-oldfreq;
 	    freqTimeZero = (frequency == 0) ? 0 : sim.t-oldfreq*(sim.t-freqTimeZero)/frequency;
 	}
-	if (n == 1) {
+	if (n == 2) {
 	    int ow = waveform;
 	    waveform = ei.choice.getSelectedIndex();
 	    if (waveform == WF_DC && ow != WF_DC) {
@@ -366,9 +383,9 @@ class VoltageElm extends CircuitElm {
 	    
 	    setPoints();
 	}
-	if (n == 4)
-	    phaseShift = ei.value*pi/180;
 	if (n == 5)
+	    phaseShift = ei.value*pi/180;
+	if (n == 6)
 	    dutyCycle = ei.value*.01;
     }
 }
