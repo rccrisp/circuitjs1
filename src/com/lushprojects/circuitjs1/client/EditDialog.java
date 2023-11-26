@@ -249,9 +249,11 @@ class EditDialog extends Dialog {
 			EditInfo ei = einfos[i];
 			if (ei.textf!=null && ei.text==null) {
 				try {
-					double d = parseUnits(ei);
-					ei.value = d;
-				} catch (Exception ex) { /* ignored */ }
+				double d = parseUnits(ei);
+				ei.value = d;
+				} catch (Exception ex) {
+					ei.text = ei.textf.getText();
+				}
 			}
 			if (ei.button != null)
 			    continue;
@@ -264,7 +266,7 @@ class EditDialog extends Dialog {
 				adj.setSliderValue(ei.value);
 			}
 		}
-		cframe.needAnalyze();
+		// cframe.needAnalyze();
 	}
 
 	public void itemStateChanged(GwtEvent e) {
