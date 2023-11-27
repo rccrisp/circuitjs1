@@ -24,6 +24,7 @@ import com.lushprojects.circuitjs1.client.util.Locale;
 
     class ResistorElm extends CircuitElm {
 	double resistance;
+	String textDisplay;
 	public ResistorElm(int xx, int yy) { super(xx, yy); resistance = 1000; }
 	public ResistorElm(int xa, int ya, int xb, int yb, int f,
 		    StringTokenizer st) {
@@ -83,8 +84,8 @@ import com.lushprojects.circuitjs1.client.util.Locale;
 	    }
 	    g.context.restore();
 	    if (sim.showValuesCheckItem.getState()) {
-		String s = getShortUnitText(resistance, "");
-		drawValues(g, s, hs+2);
+		// String s = getShortUnitText(resistance, "");
+		drawValues(g, textDisplay, hs+2);
 	    }
 	    doDots(g);
 	    drawPosts(g);
@@ -108,12 +109,17 @@ import com.lushprojects.circuitjs1.client.util.Locale;
 	}
 	public EditInfo getEditInfo(int n) {
 	    // ohmString doesn't work here on linux
-	    if (n == 0)
-		return new EditInfo("Resistance (ohms)", resistance, 0, 0);
+		if (n==0)
+			return new EditInfo("Text to Display", textDisplay);
+	    if (n == 1)
+			return new EditInfo("Resistance (ohms)", resistance, 0, 0);
 	    return null;
 	}
 	public void setEditValue(int n, EditInfo ei) {
-	    resistance = (ei.value <= 0) ? 1e-9 : ei.value;
+		if (n==0)
+			textDisplay = ei.text;
+		if (n==1)
+	    	resistance = (ei.value <= 0) ? 1e-9 : ei.value;
 	}
 	int getShortcut() { return 'r'; }
 	double getResistance() { return resistance; }

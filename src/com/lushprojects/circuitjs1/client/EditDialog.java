@@ -248,12 +248,12 @@ class EditDialog extends Dialog {
 		for (i = 0; i != einfocount; i++) {
 			EditInfo ei = einfos[i];
 			if (ei.textf!=null) {
-				try {
-				double d = parseUnits(ei);
-				ei.value = d;
-				} catch (Exception ex) {
-					ei.text = ei.textf.getText();
-				}
+				// try {
+				// double d = parseUnits(ei);
+				// ei.value = d;
+				// } catch (Exception ex) {
+				ei.text = ei.textf.getText();
+				// }
 			}
 			if (ei.button != null)
 			    continue;
